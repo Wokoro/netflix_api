@@ -27,5 +27,25 @@ export default {
     } catch (err) {
       next(err);
     }
+  },
+
+  /** 
+   * @description Controller method to sign in user.
+   * 
+   * @param {object} param0 - HTTP request body object.
+   * 
+   * @param {object} res - HTTP response object.
+   * 
+   * @returns {object} Returns sucess message and user token 
+  */
+  async signin ({ body }, res, next){
+    try{
+      const userInfos = userInfo(body);
+      const token = generateToken(userInfos);
+      userInfos.token = token;
+      sendSuccessMessage(res, 200, userInfos)
+    } catch(err) {
+      next(err);
+    }
   }
 };

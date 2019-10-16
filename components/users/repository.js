@@ -37,6 +37,19 @@ class UserRepository {
       name, email, password
     });
   }
+
+    /**
+   * @description Returns user details based on the provided parameters.
+   *
+   * @param {object} condition - Condition to find user with.
+   *
+   * @param {string} include - Optional fields to attach to user details.
+   *
+   * @return {object} Returns user details with with optional fields.
+   */
+  getOne(condition = {}, include = '') {
+    return this.model.findOne({ where: condition, include });
+  }
 }
 
 export default new UserRepository();
