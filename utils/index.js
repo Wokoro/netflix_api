@@ -30,11 +30,11 @@ export const routesLoader = (routes, router) => {
 };
 
 /**
- * Function to generate JWT
+ * @description A Function to generate JWT
  * @param {Object} payload 
  * @return {String} the jwt generated
  */
-export const generateToken = payload => jwt.sign(payload, process.env.PRI_KEY);
+export const generateToken = payload => jwt.sign(payload, process.env.PRI_TOKEN_KEY);
 
 /**
  * function to verify user token
@@ -74,28 +74,59 @@ export const passToken = async (req, res, next) => {
 };
 
 /**
- * Hashes user password
+ * @description Hashes user password
+ * 
  * @param {string} password
+ * 
  * @returns {string} returns encryted password
  */
 export const hashPassword = password => bcrypt.hashSync(password, 10);
 
 
 /**
- * A function to return all express validator errors
- * @param {Object} req 
- * @param {Object} res 
- * @param {Object} next 
- * @returns {Void} return nothing
+ * @description A function to get specific details of a user.
+ * 
+ * @param {object} user - User object to get details from.
+ * 
+ * @returns {object} Returns specified user detials.
  */
-export const checkErrors = (req, res, next) => {
-  const errors = validationResult(req);
-  const errorsHolder = [];
-  for (const error of errors.array()) {
-    errorsHolder.push(error.msg);
-  }
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ status: 'Error', error: errorsHolder });
-  }
-  next();
+export const userInfo = (user) => {
+  const { uuid, name, email } = user;
+  return { uuid, name, email };
+};
+
+/**
+ * @description A function to send client success message
+ * 
+ * @param {obejct} res - HTTP response object
+ * 
+ * @param {integer} code - HTTP status code to send
+ * 
+ * @param {string} data - Data to send to the client
+ * 
+ * @returns {object} Returns status code and data to client
+ */
+export const sendSuccessMessage = (res, code, data) => {
+  return res.status(code).send({
+    status: 'success',
+    data
+  })
+};
+
+/**
+ * @description A function to send client error message.
+ * 
+ * @param {object} res - HTTP response object
+ * 
+ * @param {integer} code - HTTP status code to send
+ * 
+ * @param {string} message - Data to send to the client
+ * 
+ * @returns {object} Returns status code and data to client
+ */
+export const sendErrorMessage = (res, code, message) => {
+  return res.status(code).send({
+    status: 'error',
+    message
+  })
 };

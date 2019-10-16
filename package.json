@@ -4,7 +4,9 @@
   "description": "A practice project that minics NETFLIX",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js --exec babel-node"
+    "start": "nodemon index.js --exec babel-node",
+    "migrate": "sequelize db:migrate",
+    "migrate:undo": "sequelize db:migrate:undo:all"
   },
   "author": "wokorosamuel@yahoo.com",
   "license": "MIT",
