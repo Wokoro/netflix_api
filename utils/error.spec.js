@@ -56,3 +56,22 @@ export class Http404Error extends HttpClientError {
     this.status = status;
   }
 }
+
+/**
+ * Class for User input validations.
+ * 
+ * @class
+ */ 
+export class InputValidationError extends HttpClientError {
+  /**
+   * @contructor
+   * 
+   * @param {string} message - Error message to be passed.
+   * 
+   * @param {number} status - Error status code.
+   */
+  constructor(message = 'Input validation error occured', status = 422) {
+    super(message);
+    this.status = status;
+  }
+}

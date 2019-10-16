@@ -2,8 +2,8 @@
  * @auther Wokoro Douye Samuel
  */
 
-import { inputValidation } from './validation';
-import userControllers from './controller';
+import { signupInputValidation, userSigninInputValidations, checkUserExistence } from './validation';
+import userController from './controller';
 
 /**
  * @description Variable to hold user routes.
@@ -11,7 +11,16 @@ import userControllers from './controller';
 export default [
   {
     path: '/signup',
-    handlers: [...inputValidation, userControllers.create],
+    handlers: [...signupInputValidation, userController.create],
     method: 'post',
-  }
+  },
+  {
+    path: '/signin',
+    handlers: [
+      ...userSigninInputValidations, 
+      checkUserExistence,
+      userController.signin
+    ],
+    method: 'post'
+  },
 ];
