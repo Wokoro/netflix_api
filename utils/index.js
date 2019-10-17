@@ -135,3 +135,15 @@ export const sendErrorMessage = (res, code, message) => {
     message
   })
 };
+
+/**
+ * @description Function to generate random index
+ * 
+ * @param {number} max - Maximun range value.
+ * 
+ * @param {number} min - Minimun range value.
+ * 
+ */
+export const randomIndex = (max, min = 0) => {
+  return Math.floor( ( Math.random() * (max - min) ) + min );
+};
