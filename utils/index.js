@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-import { validationResult } from 'express-validator';
+import userRepository from '../components/users/repository'
 
 dotenv.config();
+
 /**
  * A function to load all high level middlewares
  * @param {Object} middlewares
@@ -41,7 +42,7 @@ export const generateToken = payload => jwt.sign(payload, process.env.PRI_TOKEN_
  * @param {Object} token 
  * @returns {Void} returns nothings
  */
-export const verifyToken = token => jwt.verify(token, process.env.PRI_KEY);
+export const verifyToken = token => jwt.verify(token, process.env.PRI_TOKEN_KEY);
 
 /**
  * Fuction to verify token
@@ -56,28 +57,32 @@ export const passToken = async (req, res, next) => {
   || req.body.token;
   
   const token = rawToken ? rawToken.split(' ')[1] : false;
+  console.log('token: ', token)
   if (token) {
     try {
       const issureToken = verifyToken(token);
-      if (issureToken) {
+      const {email} = issureToken;
+      console.log('is verified: ', email)
+      const user = await userRepository.getOne({email});
+      console.log('user returned: ', user)
+      if(!user) return sendErrorMessage(res, 401, 'Authorization Failed, please login is required');  
+      if (issureToken ) {
+        console.log('Token: ', issureToken)
         req.body.token = issureToken;
         return next();
       }
     } catch (err) {
-      return res.status(400).json({ status: 400, error: 'Invalid token' });
+      return sendErrorMessage(res, 406, 'Invalid token');
     }
   }
-  return res.status(400).json({ 
-    status: 400, 
-    error: 'Authorization Failed' 
-  });  
+  return sendErrorMessage(res, 401, 'Authorization Failed, please login is required');  
 };
 
 /**
  * @description Hashes user password
  * 
  * @param {string} password
- * 
+ *  
  * @returns {string} returns encryted password
  */
 export const hashPassword = password => bcrypt.hashSync(password, 10);
